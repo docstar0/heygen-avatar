@@ -1,25 +1,24 @@
-
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8" />
   <title>HeyGen SDK Avatar</title>
-
-  <!-- ✅ Load HeyGen SDK -->
-  <script src="https://unpkg.com/@heygen/streaming-avatar@latest/dist/index.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@heygen/streaming-avatar@latest/dist/index.umd.js"></script>
 </head>
 <body>
   <button onclick="startSession()">Start Speaking</button>
   <div id="avatar-container" style="width: 400px; height: 400px; border: 1px solid #ccc;"></div>
 
   <script>
-    const token = 'NTg1MTQ0YzY1MTViNDM4YWEwNzEwODQwZWI0MjQzMDktMTc0NTk1MDc0OQ=='; // Replace with your real token
+    const token = 'NTg1MTQ0YzY1MTViNDM4YWEwNzEwODQwZWI0MjQzMDktMTc0NTk1MDc0OQ==';
 
     let avatar;
 
     async function startSession() {
-      if (typeof window.StreamingAvatar === 'undefined') {
+      // ✅ FIX: Check window.StreamingAvatar exists
+      if (!window.StreamingAvatar) {
         console.error("StreamingAvatar SDK not loaded!");
+        alert("SDK failed to load. Please check your internet connection or SDK link.");
         return;
       }
 
@@ -30,17 +29,22 @@
         });
       }
 
-      const session = await avatar.createStartAvatar({
-        avatarName: 'Judy_Doctor_Standing2_public', // Replace with your avatar name
-        quality: 'high'
-      });
+      try {
+        const session = await avatar.createStartAvatar({
+          avatarName: 'Judy_Doctor_Standing2_public',
+          quality: 'high'
+        });
 
-      await avatar.speak({
-        sessionId: session.session_id,
-        text: 'Hello from Wix!',
-        task_type: 'REPEAT'
-      });
+        await avatar.speak({
+          sessionId: session.session_id,
+          text: 'Hello from Wix!',
+          task_type: 'REPEAT'
+        });
+      } catch (err) {
+        console.error("Error starting avatar session:", err);
+      }
     }
   </script>
 </body>
 </html>
+
